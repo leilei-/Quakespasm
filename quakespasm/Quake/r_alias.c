@@ -592,7 +592,18 @@ void R_SetupAliasLighting (entity_t	*e)
 		if (add < 1.0f)
 			VectorScale(lightcolor, add, lightcolor);
 	}
-
+	// leilei - try to mimic the way quake did it
+	else
+	{
+		int e;
+		int radd;
+		for (e=0;e<3;e++)
+		{
+			if (lightcolor[e] > 128) lightcolor[e] = 128;
+			if (lightcolor[e] + add > 192) radd += 192 - lightcolor[e];
+		}
+		add = radd / 3;
+	}
 	//hack up the brightness when fullbrights but no overbrights (256)
 	if (gl_fullbrights.value && !gl_overbright_models.value)
 		if (e->model->flags & MOD_FBRIGHTHACK)
